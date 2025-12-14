@@ -1,0 +1,4 @@
+ ante ivic 1000
+ leon sa 1992
+ tina ads 2200
+ ivan hut 2000
