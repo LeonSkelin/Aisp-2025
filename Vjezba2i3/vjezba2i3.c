@@ -174,6 +174,8 @@ int main()
 			break;
 		}
 	} while (isAppRunning);
+
+	DeleteAll(&head);
 	return 0;
 }
 
@@ -271,12 +273,20 @@ int	DeleteList(Position head, char x[])
 int PushAfter(Position P, char target[])
 {
 	P = FindPrevious(P, target);
-	P = P->Next;
+	/*if (P == 0)
+	{
+		return -2;
+	}*/
+	P = P->Next; //ovo se ne pise ako stavljamo isprid odredenog elementa
 	return PushFront(P);
 }
 int PushBefore(Position P, char target[])
 {
 	P = FindPrevious(P, target);
+	/*if (P == 0)
+	{
+		return -2;
+	}*/
 	return PushFront(P);
 }
 int ReadFromFile(Position P)
