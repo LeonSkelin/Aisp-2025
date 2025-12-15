@@ -25,10 +25,19 @@ int main()
 	char filename[32] = { 0 };
 	head.Next = NULL;
 	printf("Type the name of the file: \t");
-	scanf(" %s", filename);
+	scanf(" %s", filename);	
 	printf("Converting and summing up...\n");
-	ReadFromFile(filename, &head);
-	printf("Sum of postfix is = %d", head.Next->number);
+	if (ReadFromFile(filename, &head) != 0)
+	{
+		printf("greska u citanju filea\n");
+		DeleteAll(&head);
+		return -1;
+	}
+	else
+	{
+		ReadFromFile(filename, &head);
+		printf("Sum of postfix is = %d", head.Next->number);
+	}
 	DeleteAll(&head);
 	return 0;
 }
@@ -66,33 +75,31 @@ int ReadFromFile(char* filename, Position P)
 	return 0;
 }
 
-int Provjera(char result)
+int Provjera(char c)
 {
-	if (result == '+' || result == '-' || result == '*' || result == '/')
-	{
-		return 2;
-	}
-	else
-	{
-		return 1;
-	}
+    if (c >= '0' && c <= '9')
+        return 1;
+    if (c == '+' || c == '-' || c == '*' || c == '/')
+        return 2;
+    return 0;
 }
+
 
 int Operacije(Position P, char znak)
 {
 	int a, b, sum;
-	/*if (P->Next == NULL)
+	if (P->Next == NULL || P->Next->Next == NULL)
 	{
-		printf("Not enough numbers on Stack!\n");
+		printf("Not enough operands!\n");
 		return -1;
 	}
-	if (P->Next->Next == NULL)
-	{
-		printf("Not enough numbers on Stack!\n");
-		return -1;
-	}*/
 	b = Pop(P);
 	a = Pop(P);
+	if (znak == '/' && b == 0)
+	{
+		printf("Division by zero!\n");
+		return -1;
+	}
 	switch (znak)
 	{
 	case '+':
@@ -133,6 +140,7 @@ int Pop(Position P)
 	Position target = P->Next;
 	if (target == NULL)
 	{
+		printf("greska u popu\n");
 		return -1;
 	}
 	int val = target->number;
