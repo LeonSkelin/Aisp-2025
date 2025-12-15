@@ -47,11 +47,13 @@ int main()
 	if (result == 1)
 	{
 		printf("Datoteka nije otvorena!\n");
+		deleteAll(&head1);
 		return 0;
 	}
 	else if (result == -1)
 	{
 		printf("Greska pri alokaciji memorije!\n");
+		deleteAll(&head1);
 		deleteAll(&head2);
 		return 0;
 	}
@@ -84,6 +86,7 @@ int main()
 		printf("Greska pri alokaciji memorije!\n");
 		deleteAll(&head1);
 		deleteAll(&head2);
+		deleteAll(&headSuma);
 		deleteAll(&headMultiple);
 		return 0;
 	}
@@ -124,12 +127,12 @@ int readPolynom(Position P)
 		q = (Position)malloc(sizeof(struct node));
 		if (q == NULL)
 		{
-			printf("Gre ka pri alokaciji memorije!\n");
+			printf("Greska pri alokaciji memorije!\n");
 			fclose(fp);
 			return -1;
 		}
 
-		// Postavljanje vrednosti 
+		// Postavljanje vrijednosti 
 		q->coefiecient = koef;
 		q->exponent = eksp;
 
