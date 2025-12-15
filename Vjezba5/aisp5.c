@@ -18,7 +18,7 @@ int ListUnity(Position, Position, Position);
 int ListIntersection(Position, Position, Position);
 void Print(Position);
 int PushFront(Position);
-
+int SortedInsert(Position, int);
 int main()
 {
 	List first, second, setIntersection, setUnity;
@@ -72,10 +72,38 @@ int main()
 	DeleteAll(&setIntersection);
 	return 0;
 }
-int ReadFromFile(char* filename, Position P)
-{//popravi alokaciju da zapravo radi vise new number ne samo jednom
+
+int SortedInsert(Position P, int value)
+{
+	Position prev = P;
+	Position current = P->Next;
+
+	while (current != NULL && current->number < value)
+	{
+		prev = current;
+		current = current->Next;
+	}
+
+	if (current != NULL && current->number == value)
+		return 0;
+
+	Position newNumber = (Position)malloc(sizeof(List));
+	if (newNumber == NULL)
+	{
+		printf("Error with allocation!\n");
+		return -1;
+	}
+
+	newNumber->number = value;
+	newNumber->Next = current;
+	prev->Next = newNumber;
+
+	return 0;
+}
+int ReadFromFile(char* filename, Position head)
+{
 	FILE* fp = fopen(filename, "r");
-	if (fp == NULL)
+	if (!fp)
 	{
 		printf("Nema datoteke!\n");
 		return -1;
@@ -84,123 +112,76 @@ int ReadFromFile(char* filename, Position P)
 	int value;
 	while (fscanf(fp, "%d", &value) == 1)
 	{
-		Position newNumber = (Position)malloc(sizeof(List));
-		if (newNumber == NULL)
+		if (SortedInsert(head, value) != 0)
 		{
-			printf("Error with allocation!\n");
 			fclose(fp);
 			return -1;
 		}
-
-		newNumber->number = value;
-		newNumber->Next = P->Next;
-		P->Next = newNumber;
 	}
 
 	fclose(fp);
 	return 0;
 }
+
 int ListUnity(Position unity, Position first, Position second)
 {
 	while (first != NULL && second != NULL)
 	{
-		Position newNumber = (Position)malloc(sizeof(List));
-		if (newNumber == NULL)
+		if (first->number < second->number)
 		{
-			printf("Error with allocation!\n");
-			return 0;
-		}
-		if (first->number > second->number)
-		{
-			newNumber->number = first->number;
-			newNumber->Next = unity->Next;
-			unity->Next = newNumber;
+			SortedInsert(unity, first->number);
 			first = first->Next;
 		}
-		else if (first->number == second->number) {
-			newNumber->number = first->number;
-			newNumber->Next = unity->Next;
-			unity->Next = newNumber;
-			first = first->Next;
+		else if (first->number > second->number)
+		{
+			SortedInsert(unity, second->number);
 			second = second->Next;
 		}
 		else
 		{
-			newNumber->number = second->number;
-			newNumber->Next = unity->Next;
-			unity->Next = newNumber;
+			SortedInsert(unity, first->number);
+			first = first->Next;
 			second = second->Next;
 		}
 	}
 
-	
-		while (second != NULL)
-		{
-			Position newNumber = (Position)malloc(sizeof(List));
-			if (newNumber == NULL)
-			{
-				printf("Error with allocation!\n");
-				return 0;
-			}
-			newNumber->number = second->number;
-			newNumber->Next = unity->Next;
-			unity->Next = newNumber;
-			second = second->Next;
-		}
-	
-	
-		while (first != NULL)
-		{
-			Position newNumber = (Position)malloc(sizeof(List));
-			if (newNumber == NULL)
-			{
-				printf("Error with allocation!\n");
-				return 0;
-			}
-			newNumber->number = first->number;
-			newNumber->Next = unity->Next;
-			unity->Next = newNumber;
-			first = first->Next;
-		}
+	while (first != NULL)
+	{
+		SortedInsert(unity, first->number);
+		first = first->Next;
+	}
+
+	while (second != NULL)
+	{
+		SortedInsert(unity, second->number);
+		second = second->Next;
+	}
+
 	Print(unity);
 	return 0;
 }
 
+
 int ListIntersection(Position intersection, Position first, Position second)
 {
-	Position Bookmark = second;
-	while (first != NULL)
+	while (first != NULL && second != NULL)
 	{
-		second = Bookmark;
 		if (first->number < second->number)
-		{
 			first = first->Next;
-			continue;
-		}
-		else 
+		else if (first->number > second->number)
+			second = second->Next;
+		else
 		{
-			while (second != NULL)
-			{
-				if (first->number == second->number)
-				{
-					Position newNumber = (Position)malloc(sizeof(List));
-					if (newNumber == NULL)
-					{
-						printf("Error with allocation!\n");
-						return 0;
-					}
-					newNumber->number = first->number;
-					newNumber->Next = intersection->Next;
-					intersection->Next = newNumber;
-				}
-				second = second->Next;
-			}
+			SortedInsert(intersection, first->number);
+			first = first->Next;
+			second = second->Next;
 		}
-		first = first->Next;
 	}
+
 	Print(intersection);
 	return 0;
 }
+
 
 void Print(Position target)
 {
@@ -217,7 +198,7 @@ void DeleteAll(Position P)
 	Position target;
 	while (P->Next != NULL)
 	{
-		Position target = P->Next;
+		target = P->Next;
 		P->Next = target->Next;
 		free(target);
 	}
