@@ -46,11 +46,12 @@ int main() {
         printf("5. Izlaz\n");
         scanf("%d", &choice);
 
-        switch (choice) 
+        switch (choice)
         {
         case 1:
             result = PushCircularStack(&headStack, GetRandom(), &stackSize, maxStackSize);
             if (result == -1) printf("Stog je pun!\n");
+            else if (result == -2)  return 5;
             else printf("Element dodan u stog.\n");
             break;
         case 2:
@@ -60,6 +61,7 @@ int main() {
         case 3:
             result = PushPriorityQueue(&headQueue, GetRandom(), rand() % MAX_PRIORITY + 1);
             if (result == -1) printf("Greska pri dodavanju u red!\n");
+            else if (result == -2)  return 5;
             else printf("Element dodan u red.\n");
             break;
         case 4:
@@ -94,7 +96,7 @@ int PushCircularStack(Position P, int value, int* stackSize, int maxStackSize) {
     if (!temp)
     {
         printf("Alokacija nije uspijela!\n");
-        return -1;
+        return -2;
     }
 
     temp->element = value;
@@ -105,7 +107,7 @@ int PushCircularStack(Position P, int value, int* stackSize, int maxStackSize) {
     return 0;
 }
 
-int PopCircularStack(Position P, int* stackSize) 
+int PopCircularStack(Position P, int* stackSize)
 {
     if (*stackSize == 0) return -1; // Stack is empty
 
@@ -124,7 +126,7 @@ int PushPriorityQueue(Position P, int value, int priority)
     if (!temp)
     {
         printf("Alokacija nije uspijela!\n");
-        return -1;
+        return -2;
     }
 
     temp->element = value;
@@ -152,7 +154,7 @@ int PopPriorityQueue(Position P)
 
     return 0;
 }
-    
+
 
 int DeleteAll(Position P)
 {
