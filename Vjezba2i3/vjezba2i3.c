@@ -128,7 +128,7 @@ int main()
 			}
 			break;
 		case PUSHBEFORECHOICE:
-			printf("Upisi prezime trazenog elementa?\n");
+			printf("Upisi prezime trazenog elementa:\n");
 			scanf(" %s", &target);
 			result = PushBefore(&head, target);
 			if (result != 0)
