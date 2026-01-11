@@ -15,7 +15,7 @@ struct _Stack
 int DeleteAll(Position);
 int ReadFromFile(char*, Position);
 int Push(Position, int);
-int Pop(Position);
+int Pop(Position, int*);
 int Provjera(char);
 int Operacije(Position, char);
 
@@ -25,7 +25,7 @@ int main()
 	char filename[32] = { 0 };
 	head.Next = NULL;
 	printf("Type the name of the file: \t");
-	scanf(" %s", filename);	
+	scanf(" %s", filename);
 	printf("Converting and summing up...\n");
 	if (ReadFromFile(filename, &head) != 0)
 	{
@@ -35,7 +35,6 @@ int main()
 	}
 	else
 	{
-		ReadFromFile(filename, &head);
 		printf("Sum of postfix is = %d", head.Next->number);
 	}
 	DeleteAll(&head);
@@ -60,14 +59,20 @@ int ReadFromFile(char* filename, Position P)
 		{
 			if (Push(P, result) != 0)
 			{
-				printf("doslo je do greske");
+				printf("doslo je do greske\n");
+				fclose(fp);
 				return -1;
 			}
-			
+
 		}
 		else if (x == 2)
 		{
-			Operacije(P, result);
+			if (Operacije(P, result) != 0)
+			{
+				printf("doslo je do greske u operaciji\n");
+				fclose(fp);
+				return -1;
+			}
 		}
 		else
 		{
@@ -82,11 +87,11 @@ int ReadFromFile(char* filename, Position P)
 
 int Provjera(char c)
 {
-    if (c >= '0' && c <= '9')
-        return 1;
-    if (c == '+' || c == '-' || c == '*' || c == '/')
-        return 2;
-    return 0;
+	if (c >= '0' && c <= '9')
+		return 1;
+	if (c == '+' || c == '-' || c == '*' || c == '/')
+		return 2;
+	return 0;
 }
 
 
@@ -98,8 +103,16 @@ int Operacije(Position P, char znak)
 		printf("Not enough operands!\n");
 		return -1;
 	}
-	b = Pop(P);
-	a = Pop(P);
+	if (Pop(P, &b) != 0)
+	{
+		printf("greska u skidanju elementa sa stoga\n");
+		return -1;
+	}
+	if (Pop(P, &a) != 0)
+	{
+		printf("greska u skidanju elementa sa stoga\n");
+		return -1;
+	}
 	if (znak == '/' && b == 0)
 	{
 		printf("Division by zero!\n");
@@ -109,7 +122,7 @@ int Operacije(Position P, char znak)
 	{
 	case '+':
 		sum = a + b;
-		break;
+		break;	
 	case '-':
 		sum = a - b;
 		break;
@@ -124,7 +137,7 @@ int Operacije(Position P, char znak)
 	}
 	if (Push(P, sum) != 0)
 	{
-		printf("greska u dodavanju novog elementa");
+		printf("greska u dodavanju novog elementa\n");
 		return -1;
 	}
 	return 0;
@@ -144,18 +157,18 @@ int Push(Position p, int number)
 	return 0;
 }
 
-int Pop(Position P)
+int Pop(Position P, int* val)
 {
 	Position target = P->Next;
 	if (target == NULL)
 	{
 		printf("greska u popu\n");
-		return -1;
+		return INT_MIN;
 	}
-	int val = target->number;
+	*val = target->number;
 	P->Next = target->Next;
 	free(target);
-	return val;
+	return 0;
 }
 
 int DeleteAll(Position P)
