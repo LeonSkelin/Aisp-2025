@@ -58,7 +58,12 @@ int ReadFromFile(char* filename, Position P)
 		x = Provjera(result);
 		if (x == 1)
 		{
-			Push(P, result);
+			if (Push(P, result) != 0)
+			{
+				printf("doslo je do greske");
+				return -1;
+			}
+			
 		}
 		else if (x == 2)
 		{
@@ -117,7 +122,11 @@ int Operacije(Position P, char znak)
 	default:
 		break;
 	}
-	Push(P, sum);
+	if (Push(P, sum) != 0)
+	{
+		printf("greska u dodavanju novog elementa");
+		return -1;
+	}
 	return 0;
 }
 
