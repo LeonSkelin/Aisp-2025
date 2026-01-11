@@ -51,7 +51,11 @@ int main() {
         case 1:
             result = PushCircularStack(&headStack, GetRandom(), &stackSize, maxStackSize);
             if (result == -1) printf("Stog je pun!\n");
-            else if (result == -2)  return 5;
+            else if (result == -2)
+                printf("Doslo je do greske");
+                DeleteAll(&headStack);
+                DeleteAll(&headQueue);
+                return 5;
             else printf("Element dodan u stog.\n");
             break;
         case 2:
@@ -61,7 +65,11 @@ int main() {
         case 3:
             result = PushPriorityQueue(&headQueue, GetRandom(), rand() % MAX_PRIORITY + 1);
             if (result == -1) printf("Greska pri dodavanju u red!\n");
-            else if (result == -2)  return 5;
+            else if (result == -2)
+                printf("Doslo je do greske");
+                DeleteAll(&headStack);
+                DeleteAll(&headQueue);
+                return 5;
             else printf("Element dodan u red.\n");
             break;
         case 4:
