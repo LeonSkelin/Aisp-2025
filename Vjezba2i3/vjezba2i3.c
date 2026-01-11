@@ -78,6 +78,7 @@ int main()
 			if (result != 0)
 			{
 				printf("Greska u dodavanju elementa.\n");
+				DeleteAll(&head);
 				return -2;
 			}
 			break;
@@ -86,6 +87,7 @@ int main()
 			if (result != 0)
 			{
 				printf("Greska u ispisu.\n");
+				DeleteAll(&head);
 				return -2;
 			}
 			break;
@@ -94,6 +96,7 @@ int main()
 			if (result != 0)
 			{
 				printf("Greska u dodavanju elementa.\n");
+				DeleteAll(&head);
 				return -2;
 			}
 			break;
@@ -104,6 +107,7 @@ int main()
 			if (result != 0)
 			{
 				printf("Greska u trazenju elementa.\n");
+				DeleteAll(&head);
 				return -2;
 			}
 			break;
@@ -114,6 +118,7 @@ int main()
 			if (result != 0)
 			{
 				printf("Greska u brisanju elementa.\n");
+				DeleteAll(&head);
 				return -2;
 			}
 			break;
